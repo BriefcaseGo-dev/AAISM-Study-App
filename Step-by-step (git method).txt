@@ -1,0 +1,19 @@
+# Step-by-step (git method)
+
+# Navigate to where you want the repo (or where it already is)
+cd /d/Storage/Repos/AAISM-Study-App
+
+# If you haven't cloned it yet:
+git clone https://github.com/JohnnyZam/AAISM-Study-App.git
+cd YOUR_REPO
+
+# If you already have it cloned, just cd into it and pull latest first:
+git pull origin main
+
+# Copy the obfuscated file in
+cp /d/Storage/"Study App"/"html files"/AAISM_Study_App_v8_final_xx.html ./index.html
+
+# Commit and push
+git add index.html
+git commit -m "Replace index.html with obfuscated v8 build"  (or any other message)
+git push origin main
