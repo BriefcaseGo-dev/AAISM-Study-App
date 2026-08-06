@@ -1,6 +1,6 @@
 {
   "name": "AAISM Study App",
-  "short_name": "AAISM Prep",
+  "short_name": "AI Sec Prep",
   "description": "AAISM certification prep — 300 questions, study guide, glossary, and simulated exam. Works completely offline.",
   "start_url": "./index.html",
   "scope": "./",
