@@ -153,44 +153,44 @@ body{font-family:"DM Sans",sans-serif;color:var(--text);min-height:100vh}
   <symbol id="i-infinity" viewBox="0 0 24 24"><path d="M9.83 9.17a4 4 0 1 0 0 5.66 10 10 0 0 0 2.17-2.83 10 10 0 0 1 2.17-2.83 4 4 0 1 1 0 5.66 10 10 0 0 1-2.17-2.83 10 10 0 0 0-2.17-2.83"/></symbol>
 </svg>
   <!-- LICENSE GATE SCREEN -->
-<div id="license-gate" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 20px;background:#0B1628;font-family:'DM Sans',sans-serif;color:#F1F5F9;">
+<div id="license-gate" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 20px;background:var(--navy);font-family:'DM Sans',sans-serif;color:var(--text);">
   <div style="max-width:400px;width:100%;text-align:center;">
-    <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:#3B82F6;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;">ISACA · AAISM</div>
+    <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--blue-l);letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;">ISACA · AAISM</div>
     <h1 style="font-size:24px;font-weight:600;line-height:1.2;margin-bottom:8px;">AAISM Study App</h1>
-    <p style="font-size:14px;color:#64748B;margin-bottom:40px;">Enter the license key from your purchase email to unlock your app.</p>
+    <p style="font-size:14px;color:var(--text3);margin-bottom:40px;">Enter the license key from your purchase email to unlock your app.</p>
 
     <input
       id="license-input"
       type="text"
       placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-      style="width:100%;padding:14px 16px;background:#132038;border:1px solid rgba(255,255,255,.12);border-radius:14px;font-size:14px;color:#F1F5F9;font-family:'DM Mono',monospace;letter-spacing:.05em;outline:none;margin-bottom:12px;box-sizing:border-box;"
+      style="width:100%;padding:14px 16px;background:var(--navy3);border:1px solid var(--border2);border-radius:14px;font-size:14px;color:var(--text);font-family:'DM Mono',monospace;letter-spacing:.05em;outline:none;margin-bottom:12px;box-sizing:border-box;"
     >
 
     <button
       id="license-btn"
       onclick="validateKey()"
-      style="width:100%;padding:14px 20px;background:#2563EB;color:#fff;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:16px;"
+      style="width:100%;padding:14px 20px;background:var(--blue);color:var(--ink);border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:16px;"
     >Unlock App</button>
 
     <div id="license-msg" style="font-size:13px;min-height:20px;"></div>
 
-    <p style="font-size:12px;color:#475569;margin-top:32px;">
-      Don't have a key? <a href="https://briefcasego.com/apps/aaism/index.html" style="color:#3B82F6;">Purchase the app</a>
+    <p style="font-size:12px;color:var(--text3);margin-top:32px;">
+      Don't have a key? <a href="https://briefcasego.com/apps/aaism/index.html" style="color:var(--blue-l);">Purchase the app</a>
     </p>
-    <p style="font-size:11px;color:#334155;margin-top:8px;">
+    <p style="font-size:11px;color:var(--text3);margin-top:8px;">
       Your key is only validated once. After that, the app works completely offline.
     </p>
   </div>
 </div>
 
 <!-- iOS INSTALL PROMPT -->
-<div id="ios-install-prompt" style="display:none;position:fixed;bottom:24px;left:16px;right:16px;background:#1C2E4A;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px 18px;z-index:9999;align-items:flex-start;gap:14px;font-family:'DM Sans',sans-serif;">
+<div id="ios-install-prompt" style="display:none;position:fixed;bottom:24px;left:16px;right:16px;background:var(--navy2);border:1px solid var(--border2);border-radius:16px;padding:16px 18px;z-index:9999;align-items:flex-start;gap:14px;font-family:'DM Sans',sans-serif;">
   <div style="font-size:22px;">📲</div>
   <div style="flex:1;">
-    <div style="font-size:14px;font-weight:600;color:#F1F5F9;margin-bottom:4px;">Install for offline use</div>
-    <div style="font-size:12px;color:#94A3B8;line-height:1.5;">Tap the <strong style="color:#F1F5F9;">Share button</strong> then <strong style="color:#F1F5F9;">"Add to Home Screen"</strong> to install this app — no internet needed after that.</div>
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">Install for offline use</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.5;">Tap the <strong style="color:var(--text);">Share button</strong> then <strong style="color:var(--text);">"Add to Home Screen"</strong> to install this app — no internet needed after that.</div>
   </div>
-  <button onclick="dismissInstallPrompt()" style="background:none;border:none;color:#64748B;font-size:20px;cursor:pointer;padding:0;line-height:1;">×</button>
+  <button onclick="dismissInstallPrompt()" style="background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:0;line-height:1;">×</button>
 </div>
 <div id="app">
   <div id="s-home"  class="screen active"></div>
