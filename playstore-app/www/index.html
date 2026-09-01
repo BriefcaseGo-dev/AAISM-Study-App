@@ -456,6 +456,26 @@ function triggerPurchase() {
   alert('In-app purchase is coming soon in this test build. Full access will unlock automatically once the purchase completes.');
 }
 
+/* QA-only: tap the paywall lock icon 5x within 3s to flip local unlock
+   state without going through billing. Installed apps have no address bar
+   for a `?unlock=1` query param, so this is the only way internal testers
+   can exercise the unlocked state before Play Billing is wired in.
+   Remove once real purchase verification replaces this placeholder. */
+let _qaTapCount = 0;
+let _qaTapTimer = null;
+function _qaTapUnlock() {
+  _qaTapCount++;
+  clearTimeout(_qaTapTimer);
+  _qaTapTimer = setTimeout(() => { _qaTapCount = 0; }, 3000);
+  if (_qaTapCount >= 5) {
+    _qaTapCount = 0;
+    const nowUnlocked = localStorage.getItem(AAISM_UNLOCK_KEY) !== 'true';
+    localStorage.setItem(AAISM_UNLOCK_KEY, nowUnlocked ? 'true' : 'false');
+    alert(nowUnlocked ? 'QA unlock enabled — reloading.' : 'QA unlock disabled — reloading.');
+    location.reload();
+  }
+}
+
 function showPaywall(context) {
   const copy = {
     quiz: { title: 'Unlock the Full Question Bank', body: 'The free preview includes 25 sample questions. Unlock full access for the entire question bank across every domain and difficulty.' },
@@ -473,7 +493,7 @@ function showPaywall(context) {
           <span class="topbar-title">Full Version</span>
         </div>
         <div style="padding:24px 20px;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px">
-          <div style="font-size:40px">&#128274;</div>
+          <div style="font-size:40px" onclick="_qaTapUnlock()">&#128274;</div>
           <div id="paywall-title" style="font-size:19px;font-weight:600;color:var(--text)"></div>
           <div id="paywall-body" style="font-size:14px;color:var(--text2);line-height:1.6;max-width:340px"></div>
           <button onclick="triggerPurchase()" style="margin-top:8px;padding:12px 28px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:600;cursor:pointer">Unlock Full Access</button>
