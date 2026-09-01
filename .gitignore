@@ -1,1 +1,12 @@
 CLAUDE.md
+
+# Play Store packaging (Capacitor/Android build artifacts)
+playstore-app/node_modules/
+playstore-app/android/build/
+playstore-app/android/app/build/
+playstore-app/android/.gradle/
+playstore-app/android/capacitor-cordova-android-plugins/build/
+playstore-app/android/local.properties
+playstore-app/android/*.keystore
+playstore-app/android/*.jks
+
