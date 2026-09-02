@@ -681,6 +681,23 @@ function renderGuideDetail() {
    (renderGuide();show('guide')) — reassigning it here means that entry
    point keeps working with no change to the home screen's own markup. */
 renderGuide = renderGuideList;
+
+/* ---- Fix: screen transitions didn't reset scroll at desktop-frame widths ----
+   show()'s own window.scrollTo(0,0) only resets the outer page scroll, which
+   is what matters at mobile widths (the whole page scrolls). At >=900px the
+   desktop-frame view gives each .screen its own overflow-y:auto — the
+   window never scrolls there, so window.scrollTo(0,0) does nothing useful,
+   and the newly-active screen kept whatever scrollTop the previous screen
+   was left at (e.g. paging Prev/Next through Study Guide sections while
+   scrolled partway down one). Reset the actual active screen's own
+   scrollTop too, covering both cases. Applies to every screen transition
+   in the app, not just Study Guide. */
+const _origShow = show;
+show = function (screenName) {
+  _origShow(screenName);
+  const el = document.getElementById('s-' + screenName);
+  if (el) el.scrollTop = 0;
+};
 </script>
 </body>
 </html>
