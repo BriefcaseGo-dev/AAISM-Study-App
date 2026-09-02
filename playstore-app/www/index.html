@@ -486,7 +486,7 @@ function showPaywall(context) {
 
   let el = document.getElementById('s-paywall');
   if (!el) {
-    document.body.insertAdjacentHTML('beforeend', `
+    document.getElementById('app').insertAdjacentHTML('beforeend', `
       <div class="screen" id="s-paywall">
         <div class="topbar">
           <button class="back-btn" onclick="show('home')">${typeof BACK_SVG !== 'undefined' ? BACK_SVG : '&larr;'}</button>
@@ -556,6 +556,131 @@ if (!isUnlocked() && typeof GLOSSARY !== 'undefined') {
 
 /* ---- This is a free download on Google Play; the Gumroad key gate above does not apply ---- */
 isValidated = function () { return true; };
+</script>
+<script>
+/* ===== Study Guide restructure: dedicated per-section screens =====
+   Was: all 5 sections rendered inline as one long accordion page, so
+   opening a later section (or a search match in one) meant scrolling
+   past everything above it. Now: a tappable list (like the Glossary's
+   own list-then-detail pattern) opens ONE section at a time in its own
+   screen, with Prev/Next-section buttons for continuous reading.
+   Search now shows match counts per section on the list screen; tapping
+   a section jumps straight to its first match, highlighted. */
+
+function _sgSectionMatchCount(section, term) {
+  if (!term) return 0;
+  const esc = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(esc, 'gi');
+  const m = _sgPlainText(section.html).match(re);
+  return m ? m.length : 0;
+}
+
+let _gdIndex = 0;
+
+function renderGuideList() {
+  const term = S.guideSearch.trim();
+  _sgCurrent = 0;
+
+  const rows = GUIDE.map((section, i) => {
+    if (!term) {
+      return `<button class="sg-sec-btn" onclick="openGuideSection(${i})" style="width:100%">
+        <span>${sgEsc(section.title)}</span>
+        <span style="color:var(--text3);font-size:18px;margin-left:auto">&#8250;</span>
+      </button>`;
+    }
+    const count = _sgSectionMatchCount(section, term);
+    if (count === 0) return '';
+    return `<button class="sg-sec-btn" onclick="openGuideSection(${i})" style="width:100%">
+      <span>${sgEsc(section.title)}</span>
+      <span style="font-size:12px;color:var(--blue);font-weight:600;margin-left:auto">${count} match${count !== 1 ? 'es' : ''}</span>
+    </button>`;
+  });
+
+  const wrapped = rows.map(r => r ? `<div class="sg-sec">${r}</div>` : '').join('');
+  const noMatches = term && rows.every(r => !r);
+
+  document.getElementById('s-guide').innerHTML = `
+    <div class="topbar">
+      <button class="back-btn" onclick="show('home')">${BACK_SVG}</button>
+      <span class="topbar-title">Study Guide</span>
+    </div>
+    <div style="padding:10px 16px 2px">
+      <p style="font-size:12px;color:var(--text3);line-height:1.5">Comprehensive study notes covering key exam objectives. Tap a section to open it.</p>
+    </div>
+    <div class="search-row" style="padding:0 16px 4px">
+      <div class="search-wrap" style="margin:0">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="guide-search-input" placeholder="Search study guide…" value="${esc(S.guideSearch)}" onkeydown="if(event.key==='Enter'){S.guideSearch=this.value;renderGuideList();}">
+      </div>
+      <button class="search-btn" onclick="S.guideSearch=document.getElementById('guide-search-input').value;renderGuideList()">Search</button>
+    </div>
+    ${term ? `<div style="padding:0 16px 8px"><button onclick="S.guideSearch='';renderGuideList()" style="background:none;border:none;color:var(--blue);cursor:pointer;font-size:12px;padding:0">Clear search</button></div>` : ''}
+    <div style="padding:6px 16px 60px">
+      ${noMatches ? '<div style="padding:24px;text-align:center;color:var(--text3)">No matches found</div>' : wrapped}
+    </div>`;
+}
+
+function openGuideSection(i) {
+  _gdIndex = i;
+  renderGuideDetail();
+  show('gdetail');
+}
+
+function renderGuideDetail() {
+  const section = GUIDE[_gdIndex];
+  const term = S.guideSearch.trim();
+  const bodyHtml = term ? _sgHighlightHtml(section.html, term) : section.html;
+  _sgCurrent = 0;
+
+  let el = document.getElementById('s-gdetail');
+  if (!el) {
+    document.getElementById('app').insertAdjacentHTML('beforeend', '<div class="screen" id="s-gdetail"></div>');
+    el = document.getElementById('s-gdetail');
+  }
+
+  const prevSection = _gdIndex > 0 ? GUIDE[_gdIndex - 1] : null;
+  const nextSection = _gdIndex < GUIDE.length - 1 ? GUIDE[_gdIndex + 1] : null;
+
+  el.innerHTML = `
+    <div class="topbar">
+      <button class="back-btn" onclick="show('guide')">${BACK_SVG}</button>
+      <span class="topbar-title">${sgEsc(section.title.split(' — ')[0])}</span>
+    </div>
+    <div id="sg-search-bar" style="display:${term ? 'flex' : 'none'};padding:8px 16px;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--border)">
+      <span id="sg-match-count" style="font-size:12px;color:var(--text3)"></span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button onclick="sgNavigate(-1)" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--navy2);color:var(--text2);cursor:pointer;font-size:13px">&#8592; Prev</button>
+        <span id="sg-match-ctr" style="font-size:12px;color:var(--text2);min-width:48px;text-align:center"></span>
+        <button onclick="sgNavigate(1)" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--navy2);color:var(--text2);cursor:pointer;font-size:13px">Next &#8594;</button>
+      </div>
+      <button onclick="S.guideSearch='';show('guide');renderGuideList()" style="background:none;border:none;color:var(--blue);cursor:pointer;font-size:12px;padding:0">Clear</button>
+    </div>
+    <div class="sg-body" style="padding:14px 16px 20px">${bodyHtml}</div>
+    <div style="display:flex;gap:10px;padding:6px 16px 24px">
+      ${prevSection ? `<button onclick="openGuideSection(${_gdIndex - 1})" style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--border2);background:var(--navy2);color:var(--text2);cursor:pointer;font-size:13px">&#8592; ${sgEsc(prevSection.title.split(' — ')[0])}</button>` : '<div style="flex:1"></div>'}
+      ${nextSection ? `<button onclick="openGuideSection(${_gdIndex + 1})" style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--border2);background:var(--navy2);color:var(--text2);cursor:pointer;font-size:13px">${sgEsc(nextSection.title.split(' — ')[0])} &#8594;</button>` : '<div style="flex:1"></div>'}
+    </div>`;
+
+  if (term) {
+    setTimeout(() => {
+      const total = _sgTotalMarks();
+      const countEl = document.getElementById('sg-match-count');
+      const ctrEl = document.getElementById('sg-match-ctr');
+      if (countEl) countEl.textContent = total + ' match' + (total !== 1 ? 'es' : '') + ' found';
+      if (total > 0) {
+        if (ctrEl) ctrEl.textContent = '1 / ' + total;
+        _sgActivateMark(0);
+      } else if (ctrEl) {
+        ctrEl.textContent = '';
+      }
+    }, 50);
+  }
+}
+
+/* The Study Guide feat-card on the home screen calls renderGuide() directly
+   (renderGuide();show('guide')) — reassigning it here means that entry
+   point keeps working with no change to the home screen's own markup. */
+renderGuide = renderGuideList;
 </script>
 </body>
 </html>
