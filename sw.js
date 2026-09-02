@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aaism-app-v15';
+const CACHE_NAME = 'aaism-app-v16';
 
 const APP_SHELL = [
   './index.html',
