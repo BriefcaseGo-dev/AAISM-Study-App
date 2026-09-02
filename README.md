@@ -3,8 +3,8 @@ and all styling — lives in a single downloadable HTML file (≈511 KB) that wo
 
 Source Materials Used
 
-AI Governance content
-AI Risk Management content
-AI Technologies & Controls content
-Glossary definitions
-Exam structure and domain weightings
+|AI Governance content|
+|AI Risk Management content|
+|AI Technologies & Controls content|
+|Glossary definitions|
+|Exam structure and domain weightings|
